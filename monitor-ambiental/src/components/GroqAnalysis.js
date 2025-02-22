@@ -9,16 +9,15 @@ const GroqAnalysis = ({ sensorData }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const previousTemp = useRef(sensorData.temperatura);
   const lastRequestRef = useRef(null);
-  const lastAnalysisRef = useRef(0); // Armazena o timestamp da última análise
-
+  const lastAnalysisRef = useRef(0);
   const performAnalysis = async () => {
     const now = Date.now();
-    if (now - lastAnalysisRef.current < 10000) { // 🔹 Evita múltiplas chamadas seguidas (mínimo 10s)
+    if (now - lastAnalysisRef.current < 10000) { 
       console.log("Análise ignorada: Muito cedo para uma nova requisição.");
       return;
     }
 
-    if (isAnalyzing) return; // 🔹 Evita chamadas simultâneas
+    if (isAnalyzing) return; 
 
     setLoading(true);
     setError(null);
@@ -30,28 +29,28 @@ const GroqAnalysis = ({ sensorData }) => {
       setAnalysis(result);
       setLastAnalysisTime(new Date());
       previousTemp.current = sensorData.temperatura;
-      lastAnalysisRef.current = Date.now(); // 🔹 Atualiza o tempo da última análise
+      lastAnalysisRef.current = Date.now(); 
     } catch (err) {
       setError('Falha ao obter análise');
       console.error("Erro na análise:", err);
     } finally {
       setLoading(false);
-      setTimeout(() => setIsAnalyzing(false), 15000); // 🔹 Impede novas análises por 15s após cada requisição
+      setTimeout(() => setIsAnalyzing(false), 15000);
     }
   };
 
   useEffect(() => {
     const shouldAnalyze = () => {
-      if (!lastAnalysisTime) return true; // Primeira análise
+      if (!lastAnalysisTime) return true; 
 
       const now = Date.now();
       const timeSinceLastAnalysis = now - lastAnalysisRef.current;
-      const fiveMinutes = 5 * 60 * 1000; // 5 minutos
+      const fiveMinutes = 5 * 60 * 1000; 
 
       return (
-        timeSinceLastAnalysis > fiveMinutes ||  // ⏳ Espera 5 minutos
-        sensorData.gas === 0 ||  // 🚨 Se detectar gás (0 = problema)
-        Math.abs(sensorData.temperatura - previousTemp.current) > 5 // 🔥 Se temperatura variar mais de 5°C
+        timeSinceLastAnalysis > fiveMinutes ||  
+        sensorData.gas === 0 ||  
+        Math.abs(sensorData.temperatura - previousTemp.current) > 5 
       );
     };
 
@@ -59,7 +58,7 @@ const GroqAnalysis = ({ sensorData }) => {
       clearTimeout(lastRequestRef.current);
       lastRequestRef.current = setTimeout(() => {
         performAnalysis();
-      }, 5000); // 🔹 Aguarda 5s antes de chamar a análise
+      }, 5000); 
     }
   }, [sensorData]);
 

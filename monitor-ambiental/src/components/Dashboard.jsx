@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import GroqAnalysis from './GroqAnalysis';
 
-// Rest of the component remains the same
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [currentData, setCurrentData] = useState({
@@ -14,7 +13,7 @@ const Dashboard = () => {
     gas: 0
   });
   const [alerts, setAlerts] = useState([]);
-  const [activeGraph, setActiveGraph] = useState('both'); // 'both', 'temperatura', or 'umidade'
+  const [activeGraph, setActiveGraph] = useState('both'); 
 
   useEffect(() => {
     const fetchData = async () => {
